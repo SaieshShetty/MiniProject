@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Log-in</title>
+</head>
+
+<body>
+    <div class="min-h-screen w-full bg-zinc-900 p-5 text-white">
+        <div class="w-full flex justify-end">
+            <button class="bg-red-500 rounded-md p-2 text-sm "><a href="/logout">Logout</a></button>
+        </div>
+        <h1 class="text-3xl mb-3"><span class="font-light">Hello</span>
+            <%= user.username %>
+        </h1>
+        <h5 class="mb-2">You can create a new post</h5>
+        <form action="/post" method="post">
+            <textarea placeholder="What's on your mind.?"
+                class="outline-none w-1/3 p-3 resize-none bg-transparent border-2 border-zinc-800 rounded-md"
+                name="content"></textarea>
+            <input class="bg-blue-300 rounded-2xl p-2 block text-sm w-40 mt-2" type="submit" value="Create new Post">
+        </form>
+        <div class="mt-10">
+            <h3 class="text-zinc-400">Your Posts</h3>
+            <div class="postcontainer mt-3 grid grid-cols-3 gap-4">
+                <% user.posts.reverse().forEach(function(post){ %>
+                    <div class="post p-4 border-2 border-zinc-700 rounded-md bg-zinc-800">
+                        <h4 class="text-blue-300 mb-2">@<%= user.name %></h4>
+                        <p class="text-sm tracking-tight"><%= post.content %></p>
+                        <small class="text-blue-200"><%= post.likes.length %> likes</small>
+                        <div class="btns flex">
+                            <a href="/like/<%= post._id %>" class="text-blue-500 mt-2">
+                                <%= post.likes.indexOf(user._id) === -1 ? "Like" : "Unlike" %>
+                            </a>
+                            <a href="/edit/<%= post._id %>" class="text-red-400 mt-2 ml-4">Edit</a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            
+        </div>
+    </div>
+</body>
+
+</html>
