@@ -6,14 +6,29 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt') ;
 const jwt = require('jsonwebtoken');
 const post = require('./models/post');
+const path = require('path') ;
+const upload = require('./config/multerconfig') ;
+const { log } = require('console');
 
 app.set('view engine' , 'ejs') ;
 app.use(express.json()) ;
 app.use(cookieParser()) ;
 app.use(express.urlencoded({extended:true})) ;
+app.use(express.static(path.join(__dirname,"public")))
 
 app.get('/' , (req,res) =>{
     res.render('index') ;
+})
+
+app.get('/profile/upload' , (req,res) =>{
+    res.render('profileupload') ;
+})
+
+app.post('/upload' ,isLoggedIn,upload.single("image") , async (req,res) =>{
+    let user = await usermodel.findOne({email : req.user.email}) ;
+    user.profilepic = req.file.filename ;
+    await user.save() ;
+    res.redirect('/profile') ;
 })
 
 app.post('/register' , async (req,res) =>{
